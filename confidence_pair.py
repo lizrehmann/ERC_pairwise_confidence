@@ -2,6 +2,8 @@
 import numpy as np
 import pandas as pd
 import itertools
+import seaborn as sns
+import matplotlib.pyplot as plt
 import sys
 
 #read in genes of interest tsv to df
@@ -78,3 +80,26 @@ for _, row in pair_df.iterrows():
 
 #Store the heatmap data as a tsv file
 heatmap_df.to_csv("heatmap_matrix.tsv", sep = "\t")
+
+# Create the plot
+# Create a mask for the upper triangle
+mask = np.triu(np.ones_like(heatmap_df, dtype=bool))
+
+plt.figure(figsize=(12, 10))
+sns.heatmap(
+    heatmap_df,
+    mask=mask,
+    cmap="viridis",
+    square=True,
+    linewidths=0.5,
+    linecolor='gray',
+    cbar_kws={'label': 'P_R2'},
+    xticklabels=True,
+    yticklabels=True
+)
+plt.title("ERC P_R2 Heatmap (Lower Triangle)")
+plt.xticks(rotation=90)
+plt.yticks(rotation=0)
+plt.tight_layout()
+plt.show()
+plt.savefig("erc_p_r2_heatmap.pdf", format="pdf")
